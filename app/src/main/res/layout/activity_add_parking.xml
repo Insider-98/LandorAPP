@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddParking">
+
+    <TextView
+        android:id="@+id/name_label_nombreParking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="48dp"
+        android:text="Nombre parking"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/name_text_nombreParking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:ems="10"
+        android:hint="enter_name_hint"
+        android:inputType="text"
+        app:layout_constraintBaseline_toBaselineOf="@+id/name_label_nombreParking"
+        app:layout_constraintStart_toEndOf="@+id/name_label_nombreParking" />
+
+    <TextView
+        android:id="@+id/name_label_tarifa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="48dp"
+        android:text="tarifa parking"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/name_label_nombreParking" />
+
+    <EditText
+        android:id="@+id/name_text_tarifa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:ems="10"
+        android:hint="enter_name_hint"
+        android:inputType="numberDecimal"
+        app:layout_constraintBaseline_toBaselineOf="@+id/name_label_tarifa"
+        app:layout_constraintStart_toEndOf="@+id/name_label_tarifa" />
+
+    <TextView
+        android:id="@+id/name_label_direccion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="48dp"
+        android:text="direccion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/name_label_tarifa" />
+
+    <EditText
+        android:id="@+id/name_text_direccion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:ems="10"
+        android:hint="enter_name_hint"
+        android:inputType="text"
+        app:layout_constraintBaseline_toBaselineOf="@+id/name_label_direccion"
+        app:layout_constraintStart_toEndOf="@+id/name_label_direccion" />
+
+    <TextView
+        android:id="@+id/address_label_ciudad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="ciudad"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name_label_direccion" />
+
+    <EditText
+        android:id="@+id/address_text_ciudad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="enter_address_hint"
+        android:inputType="textPostalAddress"
+        app:layout_constraintBaseline_toBaselineOf="@+id/address_label_ciudad"
+        app:layout_constraintStart_toEndOf="@+id/address_label_ciudad" />
+
+    <TextView
+        android:id="@+id/address_label_postal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="codigo postal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/address_label_ciudad" />
+
+    <EditText
+        android:id="@+id/address_text_postal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="enter_address_hint"
+        android:inputType="number"
+        app:layout_constraintBaseline_toBaselineOf="@+id/address_label_postal"
+        app:layout_constraintStart_toEndOf="@+id/address_label_postal" />
+
+    <TextView
+        android:id="@+id/address_label_provincia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="provincia"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/address_label_postal" />
+
+    <EditText
+        android:id="@+id/address_text_provincia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="enter_address_hint"
+        android:inputType="text"
+        app:layout_constraintBaseline_toBaselineOf="@+id/address_label_provincia"
+        app:layout_constraintStart_toEndOf="@+id/address_label_provincia" />
+
+    <TextView
+        android:id="@+id/address_label_pais"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="pais"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/address_label_provincia" />
+
+    <EditText
+        android:id="@+id/address_text_pais"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="enter_address_hint"
+        android:inputType="text"
+        app:layout_constraintBaseline_toBaselineOf="@+id/address_label_pais"
+        app:layout_constraintStart_toEndOf="@+id/address_label_pais" />
+
+
+
+
+
+    <Button
+        android:id="@+id/btnComprar_adress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:onClick="GuardarParking"
+        android:text="GUARDAR"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/address_label_pais" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

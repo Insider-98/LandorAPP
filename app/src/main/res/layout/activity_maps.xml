@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MapsActivity">
+    <FrameLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <fragment
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MapsActivity"
+            />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/customLayout"
+            android:layout_width="284dp"
+            android:layout_height="100dp"
+            android:layout_gravity="bottom|center"
+            android:layout_marginLeft="40dp"
+
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="80dp"
+            app:cardCornerRadius="7dp"
+            app:cardElevation="5dp"
+            app:cardBackgroundColor="#00ffffff"
+            >
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/iv_look"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:src="#F3E8B8"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:riv_corner_radius="10dp"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/logotick" />
+
+
+                <TextView
+                    android:id="@+id/textViewTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="INFORMACION" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/colorOrange"
+        app:itemIconTint="@color/nav_but_colors"
+        app:itemTextColor="@color/nav_but_colors"
+        app:menu="@menu/menu">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+</RelativeLayout>

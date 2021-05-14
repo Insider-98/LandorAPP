@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">LandorApp</string>
+    !-- OAuth 2.0 Client Details -->
+    <string name="forgerock_oauth_client_id" translatable="false">ForgeRockSDKClient</string>
+    <string name="forgerock_oauth_redirect_uri" translatable="false">https://sdkapp.example.com:8443/callback</string>
+    <string name="forgerock_oauth_scope" translatable="false">openid profile email address phone</string>
+    <integer name="forgerock_oauth_threshold" translatable="false">30</integer>
+
+    <!-- AM Instance Details -->
+    <string name="forgerock_url" translatable="false">http://server.landor.com:8080/openam</string>
+    <string name="forgerock_cookie_name" translatable="false">iPlanetDirectoryPro</string>
+    <string name="forgerock_realm" translatable="false">LandorRealm</string>
+    <integer name="forgerock_timeout" translatable="false">30</integer>
+
+    <!-- Single Sign-On Details -->
+    <string name="forgerock">ForgeRock SDK Tutorial</string>
+    <string name="forgerock_account_name" translatable="false">Demo User</string>
+
+    <!-- AM Tree Details -->
+    <string name="forgerock_auth_service" translatable="false">sdkAuthenticationTree</string>
+    <string name="title_activity_maps">Map</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="authenticateError">Datos incorrectos. Vuelve a introducirlos</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+</resources>
