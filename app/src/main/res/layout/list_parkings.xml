@@ -1,38 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:padding="16dp"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp">
 
     <androidx.cardview.widget.CardView
+
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="130dp"
         android:id="@+id/cv"
+        app:cardBackgroundColor="@color/colorOrange"
+        app:cardCornerRadius="30dp"
         >
 
         <RelativeLayout
+            android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="16dp">
+            android:padding="13dp">
 
 
             <TextView
                 android:id="@+id/nombreParking_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="NombreParkingTest"
+                android:textSize="17sp"
+                android:layout_margin="2dp"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/nombreEmpresa_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="NombreEmpresa"
+                android:layout_marginLeft="40dp"
+                android:textSize="12sp"
+                android:textColor="@color/white"
+                android:layout_toRightOf="@id/nombreParking_label"
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/tarifa_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="2.55€/min"
+                android:layout_marginTop="15dp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="5dp"
+
+                android:textSize="15sp"
+                android:layout_below="@id/nombreEmpresa_label"/>
+
+            <TextView
+                android:id="@+id/direccion_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Carrer del Principat, 27, 08292 Esparreguera, Barcelona, España "
+                android:layout_below="@id/tarifa_label"
+                android:layout_marginLeft="5dp"/>
 
 
         </RelativeLayout>

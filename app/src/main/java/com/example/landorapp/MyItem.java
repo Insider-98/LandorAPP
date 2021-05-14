@@ -9,6 +9,7 @@ public class MyItem implements ClusterItem {
     private final String title;
     private final String snippet;
 
+
     public MyItem(double lat, double lng, String title, String snippet) {
         position = new LatLng(lat, lng);
         this.title = title;

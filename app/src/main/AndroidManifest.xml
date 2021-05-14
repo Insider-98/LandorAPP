@@ -20,7 +20,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LandorApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MostrarParkings"></activity>
+        <activity android:name=".InfoParking"></activity>
+        <activity
+            android:name=".MostrarParkings"
+            android:theme="@style/customLandorTheme" />
         <activity android:name=".AddParking" />
         <activity android:name=".ManagerSettings" />
         <activity android:name=".TestActivity" />

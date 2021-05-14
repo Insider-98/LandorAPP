@@ -18,6 +18,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,13 +36,19 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.maps.android.clustering.ClusterManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import github.nisrulz.easydeviceinfo.base.EasyLocationMod;
 
 public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
-
+    private static final String URL_parkings = "http://192.168.1.144/landorWebServices/parkings.php";
     private ClusterManager<MyItem> clusterManager;
     private GoogleMap mMap;
     private Marker markerPrueba;
@@ -46,11 +59,17 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     CardView linearLayoutCustomView;
     boolean clickinicial;
     Marker prevMarker;
+    List<Parking> parkingList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        parkingList = new ArrayList<>();
+        //cargo primero los nombre de empresa en el volley ya que no puedo hacer dos peticiones a la vez
+
+
         linearLayoutCustomView = findViewById(R.id.customLayout);
         linearLayoutCustomView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +111,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.lista:
-                        startActivity(new Intent(getApplicationContext(), AddParking.class));
+                        startActivity(new Intent(getApplicationContext(), MostrarParkings.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.configuracion:
@@ -140,7 +159,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         mMap.setMaxZoomPreference(19.0f);
 
         clusterManager = new ClusterManager<MyItem>(this, mMap);
-        addItems();
+        cargarParkings();
         clusterManager.setRenderer(new OwnIconRendered(getApplicationContext(), mMap, clusterManager));
         mMap.setOnCameraIdleListener(clusterManager);
         mMap.setOnMarkerClickListener(this);
@@ -153,19 +172,13 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
 
     private void addItems() {
 
-        // Set some lat/lng coordinates to start with.
-        double lat = l[0];
-        double lng = l[1];
-
         // Add ten cluster items in close proximity, for purposes of this example.
         //aqui se añaden los puntos
-        for (int i = 0; i < 50; i++) {
-            double offset =  0.0004;
-            lat = lat + offset;
-            lng = lng + offset;
-            MyItem infoWindowItem = new MyItem(lat, lng,"Title " + i, "Snippet " + i);
+        Log.d("TAsdG", "addItems: "+ parkingList.size());
 
-            clusterManager.addItem(infoWindowItem);
+        for (int i = 0; i < parkingList.size(); i++) {
+            Parking parking = parkingList.get(i);
+
 
         }
     }
@@ -213,8 +226,12 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     private void displayCustomeInfoWindow(Marker marker) {
         linearLayoutCustomView.setVisibility(View.VISIBLE);
         TextView textViewTitle = linearLayoutCustomView.findViewById(R.id.textViewTitle);
+        TextView textViewTarifa = linearLayoutCustomView.findViewById(R.id.textViewTarifa);
+        TextView textViewDireccion = linearLayoutCustomView.findViewById(R.id.textViewDireccion);
         // TextView textViewOtherDetails = linearLayoutCustomView.findViewById(R.id.textViewOtherDetails);
-        textViewTitle.setText(getCompleteAddressString(marker.getPosition().latitude, marker.getPosition().longitude));
+        textViewTitle.setText(marker.getTitle());
+        textViewTarifa.setText(marker.getSnippet()+"€/min");
+        textViewDireccion.setText(getCompleteAddressString(marker.getPosition().latitude, marker.getPosition().longitude));
         // textViewOtherDetails.setText("LatLong :: " + marker.getPosition().latitude + "," + marker.getPosition().longitude);
 
     }
@@ -241,4 +258,34 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         }
         return strAdd;
     }
+
+
+    private void cargarParkings() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL_parkings, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray array = new JSONArray(response);
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject parking = array.getJSONObject(i);
+                        Double lat = Double.parseDouble(parking.getString("lat"));
+                        Double lng = Double.parseDouble(parking.getString("longt"));
+                        Log.d("TAsdG", "addItems: "+ lat+" "+lng);
+                        MyItem infoWindowItem = new MyItem(lat,lng,parking.getString("nombre"), parking.getString("tarifa"));
+                        clusterManager.addItem(infoWindowItem);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }
+        );
+        Volley.newRequestQueue(this).add(stringRequest);
+    }
+
 }

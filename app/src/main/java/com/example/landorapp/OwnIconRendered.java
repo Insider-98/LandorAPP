@@ -17,6 +17,7 @@ class OwnIconRendered extends DefaultClusterRenderer<MyItem> {
 
     @Override
     protected void onBeforeClusterItemRendered(MyItem item, MarkerOptions markerOptions) {
+        //TODO ORGIEN AQUI crasheo no arreglado cuand oselecciono uno hago pequeño los items para que se junten y selecciono otro
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.googlemarker));
         markerOptions.snippet(item.getSnippet());
         markerOptions.title(item.getTitle());
