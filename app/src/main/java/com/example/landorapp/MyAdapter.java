@@ -67,6 +67,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ParkingViewHolder>
                 @Override
                 public void onClick(View view) {
                     itemView.getContext().startActivity(new Intent(itemView.getContext(), TestActivity.class));
+                    Intent intent = new Intent(itemView.getContext(), InfoParking.class);
+                    String message = textViewNombre.getText().toString();
+                    intent.putExtra("MENSAJE_NOMBRE", textViewNombre.getText().toString());
+                    intent.putExtra("MENSAJE_EMPRESA", textViewEmpresa.getText().toString());
+                    intent.putExtra("MENSAJE_TARIFA", textViewTarifa.getText().toString());
+                    intent.putExtra("MENSAJE_DIRECCION", textViewDireccion.getText().toString());
+                    itemView.getContext().startActivity(intent);
                 }
             });
         }
