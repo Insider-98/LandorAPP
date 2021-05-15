@@ -20,12 +20,35 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UserinfoActivity extends AppCompatActivity {
+    boolean isManager=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userinfo);
         TextView userInfoTxt = findViewById(R.id.textViewUserinfo);
+
+        FRUser.getCurrentUser().getUserInfo(new FRListener<UserInfo>() {
+            @Override
+            public void onSuccess(UserInfo result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject json = result.getRaw();
+                            String rol = json.getString("roles");
+                            if(rol.contains("Manager")) isManager=true;
+                        } catch (JSONException e) {
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onException(Exception e) {
+
+            }
+        });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.configuracion);
@@ -43,42 +66,21 @@ public class UserinfoActivity extends AppCompatActivity {
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.configuracion:
-                        startActivity(new Intent(getApplicationContext(), UserinfoActivity.class));
-                        overridePendingTransition(0,0);
+                        if(isManager){
+                            startActivity(new Intent(getApplicationContext(), ManagerSettings.class));
+                            overridePendingTransition(0,0);
+                        }
+                        else {
+                            startActivity(new Intent(getApplicationContext(), UserSettings.class));
+                            overridePendingTransition(0, 0);
+                        }
                         return true;
                 }
                 return false;
             }
         });
 
-        FRUser.getCurrentUser().getUserInfo(new FRListener<UserInfo>() {
 
-            @Override
-            public void onSuccess(UserInfo result) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                           // userInfoTxt.setText(result.getRaw().toString(4));
-                            JSONObject json = result.getRaw();
-                            String rol = json.getString("roles");
-                            userInfoTxt.setText("Tu nombre completo es: " + json.getString("name") + " y tu rol es " + rol);
-
-
-                            if(rol.contains("Manager")) Log.d("dd", "run: es manager");
-                            else Log.d("du", "run: no es nada");
-                        } catch (JSONException e) {
-                            // Handle errors
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onException(Exception e) {
-
-            }
-        });
 
         FloatingActionButton btnLogout = findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(new View.OnClickListener() {

@@ -6,6 +6,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -23,6 +24,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.forgerock.android.auth.FRListener;
+import org.forgerock.android.auth.FRUser;
+import org.forgerock.android.auth.UserInfo;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,15 +42,35 @@ public class MostrarParkings extends AppCompatActivity {
     List<Parking> parkingList;
     RecyclerView recyclerView;
     HashMap<String, String> empresas = new HashMap<String, String>();
-
-
+    boolean isManager = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrar_parkings);
+        //sacamos user
+        FRUser.getCurrentUser().getUserInfo(new FRListener<UserInfo>() {
+            @Override
+            public void onSuccess(UserInfo result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject json = result.getRaw();
+                            String rol = json.getString("roles");
+                            if(rol.contains("Manager")) isManager=true;
+                        } catch (JSONException e) {
+                        }
+                    }
+                });
+            }
 
+            @Override
+            public void onException(Exception e) {
+
+            }
+        });
 
         recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -59,21 +83,25 @@ public class MostrarParkings extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.lista);
-
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.mapa:
-                        startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                        startActivity(new Intent(MostrarParkings.this, MapsActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.lista:
-                        startActivity(new Intent(getApplicationContext(), MostrarParkings.class));
+                        startActivity(new Intent(MostrarParkings.this, MostrarParkings.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.configuracion:
-                        startActivity(new Intent(getApplicationContext(), UserinfoActivity.class));
+                        if(isManager){
+                            startActivity(new Intent(MostrarParkings.this, ManagerSettings.class));
+                        }
+                        else {
+                            startActivity(new Intent(MostrarParkings.this, UserSettings.class));
+                        }
                         overridePendingTransition(0,0);
                         return true;
                 }

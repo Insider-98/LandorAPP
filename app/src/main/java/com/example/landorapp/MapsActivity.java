@@ -36,6 +36,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.maps.android.clustering.ClusterManager;
 
+import org.forgerock.android.auth.FRListener;
+import org.forgerock.android.auth.FRUser;
+import org.forgerock.android.auth.UserInfo;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,21 +54,44 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     private static final String URL_parkings = "http://192.168.1.144/landorWebServices/parkings.php";
     private ClusterManager<MyItem> clusterManager;
     private GoogleMap mMap;
-    private Marker markerPrueba;
-    private LocationManager ubicacion;
-    EasyLocationMod easyLocationMod;
     double[] l;
     String lat, lon;
     CardView linearLayoutCustomView;
     boolean clickinicial;
     Marker prevMarker;
     List<Parking> parkingList;
+    boolean isManager=false;
+    HashMap<String, String> empresas = new HashMap<String, String>();
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        //consigo el user
+        FRUser.getCurrentUser().getUserInfo(new FRListener<UserInfo>() {
+            @Override
+            public void onSuccess(UserInfo result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject json = result.getRaw();
+                            String rol = json.getString("roles");
+                            if(rol.contains("Manager")) isManager=true;
+                        } catch (JSONException e) {
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onException(Exception e) {
+
+            }
+        });
+        getNombreEmpresas();
         parkingList = new ArrayList<>();
         //cargo primero los nombre de empresa en el volley ya que no puedo hacer dos peticiones a la vez
 
@@ -75,8 +101,13 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
             @Override
             public void onClick(View v) {
                 //write your function here.
-               Intent intent = new Intent(MapsActivity.this, TestActivity.class);
-                startActivity(intent);
+                Parking parkingSeleccionado = buscarParking();
+                Intent intent = new Intent(MapsActivity.this, InfoParking.class);
+                intent.putExtra("MENSAJE_NOMBRE", parkingSeleccionado.getNombreParking());
+                intent.putExtra("MENSAJE_EMPRESA", parkingSeleccionado.getNombreEmpresa());
+                intent.putExtra("MENSAJE_TARIFA", parkingSeleccionado.getTarifa());
+                intent.putExtra("MENSAJE_DIRECCION", parkingSeleccionado.getDireccion());
+                MapsActivity.this.startActivity(intent);
             }
         });
         linearLayoutCustomView.setVisibility(View.GONE);
@@ -107,15 +138,20 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.mapa:
-                        startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                        startActivity(new Intent(MapsActivity.this, MapsActivity.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.lista:
-                        startActivity(new Intent(getApplicationContext(), MostrarParkings.class));
+                        startActivity(new Intent(MapsActivity.this, MostrarParkings.class));
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.configuracion:
-                        startActivity(new Intent(getApplicationContext(), UserinfoActivity.class));
+                        if(isManager){
+                            startActivity(new Intent(MapsActivity.this, ManagerSettings.class));
+                        }
+                        else {
+                            startActivity(new Intent(MapsActivity.this, UserSettings.class));
+                        }
                         overridePendingTransition(0,0);
                         return true;
                 }
@@ -170,18 +206,6 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         // mMap.getUiSettings().setMyLocationButtonEnabled(true);
     }
 
-    private void addItems() {
-
-        // Add ten cluster items in close proximity, for purposes of this example.
-        //aqui se añaden los puntos
-        Log.d("TAsdG", "addItems: "+ parkingList.size());
-
-        for (int i = 0; i < parkingList.size(); i++) {
-            Parking parking = parkingList.get(i);
-
-
-        }
-    }
 
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
@@ -271,6 +295,16 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
                         Double lat = Double.parseDouble(parking.getString("lat"));
                         Double lng = Double.parseDouble(parking.getString("longt"));
                         Log.d("TAsdG", "addItems: "+ lat+" "+lng);
+                        parkingList.add(new Parking(
+                                parking.getString("nombre"),
+                                parking.getString("lat"),
+                                parking.getString("longt"),
+                                parking.getString("tarifa")+"€/min",
+                                parking.getString("id_Empresa"),
+                                getCompleteAddressString(Double.parseDouble(parking.getString("lat")), Double.parseDouble(parking.getString("longt"))),
+                                empresas.get(parking.getString("id_Empresa"))
+
+                        ));
                         MyItem infoWindowItem = new MyItem(lat,lng,parking.getString("nombre"), parking.getString("tarifa"));
                         clusterManager.addItem(infoWindowItem);
                     }
@@ -286,6 +320,42 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         }
         );
         Volley.newRequestQueue(this).add(stringRequest);
+    }
+
+    private Parking buscarParking(){
+        Parking parking = null;
+        for (int i = 0; i<parkingList.size();i++){
+            if(parkingList.get(i).getNombreParking().equals(prevMarker.getTitle())){
+                 return parkingList.get(i);
+            }
+        }
+        return parking;
+
+    }
+
+    private void getNombreEmpresas(){
+        JsonArrayRequest jsonArrayRequest= new JsonArrayRequest("http://192.168.1.144/landorWebServices/getEmpresas.php", new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                JSONObject jsonObject = null;
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        jsonObject = response.getJSONObject(i);
+                        empresas.put(jsonObject.getString("id_Empresa"), jsonObject.getString("nombre"));
+                    } catch (JSONException e) {
+                        // Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Toast.makeText(getApplicationContext(), "error de conexion", Toast.LENGTH_SHORT).show();
+            }
+        }
+        );
+        RequestQueue requestQueue=Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
     }
 
 }
