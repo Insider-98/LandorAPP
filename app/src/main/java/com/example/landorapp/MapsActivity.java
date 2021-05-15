@@ -50,7 +50,7 @@ import java.util.Locale;
 
 import github.nisrulz.easydeviceinfo.base.EasyLocationMod;
 
-public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapsActivity extends FragmentActivity implements  GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static final String URL_parkings = "http://192.168.1.144/landorWebServices/parkings.php";
     private ClusterManager<MyItem> clusterManager;
     private GoogleMap mMap;
@@ -62,6 +62,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
     List<Parking> parkingList;
     boolean isManager=false;
     HashMap<String, String> empresas = new HashMap<String, String>();
+    Usuario usuario;
 
 
 
@@ -70,27 +71,11 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         //consigo el user
-        FRUser.getCurrentUser().getUserInfo(new FRListener<UserInfo>() {
-            @Override
-            public void onSuccess(UserInfo result) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            JSONObject json = result.getRaw();
-                            String rol = json.getString("roles");
-                            if(rol.contains("Manager")) isManager=true;
-                        } catch (JSONException e) {
-                        }
-                    }
-                });
-            }
+        //sacamos user
+        Intent i = getIntent();
+        usuario = (Usuario)i.getSerializableExtra("sampleObject");
+        isManager=usuario.isManager();
 
-            @Override
-            public void onException(Exception e) {
-
-            }
-        });
         getNombreEmpresas();
         parkingList = new ArrayList<>();
         //cargo primero los nombre de empresa en el volley ya que no puedo hacer dos peticiones a la vez
@@ -138,19 +123,27 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnInfoWi
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.mapa:
-                        startActivity(new Intent(MapsActivity.this, MapsActivity.class));
+                        Intent a = new Intent(MapsActivity.this,MapsActivity.class);
+                        a.putExtra("sampleObject", usuario);
+                        startActivity(a);
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.lista:
-                        startActivity(new Intent(MapsActivity.this, MostrarParkings.class));
+                        Intent b = new Intent(MapsActivity.this,MostrarParkings.class);
+                        b.putExtra("sampleObject", usuario);
+                        startActivity(b);
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.configuracion:
                         if(isManager){
-                            startActivity(new Intent(MapsActivity.this, ManagerSettings.class));
+                            Intent c = new Intent(MapsActivity.this,ManagerSettings.class);
+                            c.putExtra("sampleObject", usuario);
+                            startActivity(c);
                         }
                         else {
-                            startActivity(new Intent(MapsActivity.this, UserSettings.class));
+                            Intent d = new Intent(MapsActivity.this,UserSettings.class);
+                            d.putExtra("sampleObject", usuario);
+                            startActivity(d);
                         }
                         overridePendingTransition(0,0);
                         return true;

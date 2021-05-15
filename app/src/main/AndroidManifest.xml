@@ -20,15 +20,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LandorApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".UserSettings"></activity>
+        <activity android:name=".UserSettings" android:theme="@style/customLandorTheme" ></activity>
         <activity android:name=".InfoParking"  android:theme="@style/customLandorTheme" />
         <activity
             android:name=".MostrarParkings"
             android:theme="@style/customLandorTheme" />
         <activity android:name=".AddParking" />
-        <activity android:name=".ManagerSettings" />
-        <activity android:name=".TestActivity" />
-        <activity android:name=".UserConfigTest" />
+        <activity android:name=".ManagerSettings" android:theme="@style/customLandorTheme"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -44,7 +42,6 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".UserinfoActivity" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/customLandorTheme">

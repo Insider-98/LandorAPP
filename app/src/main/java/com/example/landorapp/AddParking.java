@@ -3,6 +3,7 @@ package com.example.landorapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -58,7 +59,7 @@ public class AddParking extends AppCompatActivity {
     TextView codigoPostal;
     TextView provincia;
     TextView pais;
-
+    Usuario usuario;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,30 +72,9 @@ public class AddParking extends AppCompatActivity {
         provincia= findViewById(R.id.address_text_provincia);
         pais= findViewById(R.id.address_text_pais);
 
-        FRUser.getCurrentUser().getUserInfo(new FRListener<UserInfo>() {
-
-            @Override
-            public void onSuccess(UserInfo result) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            // userInfoTxt.setText(result.getRaw().toString(4));
-                            JSONObject json = result.getRaw();
-                            username = json.getString("sub");
-                            Log.d("usernamedetected", "run: " + username);
-                        } catch (JSONException e) {
-                            // Handle errors
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onException(Exception e) {
-
-            }
-        });
+        Intent i = getIntent();
+        usuario = (Usuario)i.getSerializableExtra("sampleObject");
+        username = usuario.getUsername();
     }
 
     public void GuardarParking(View view) {
@@ -127,6 +107,9 @@ public class AddParking extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(getApplicationContext(), "Parking guardado correctamente", Toast.LENGTH_LONG).show();
+                        Intent a = new Intent(AddParking.this,ManagerSettings.class);
+                        a.putExtra("sampleObject", usuario);
+                        startActivity(a);
                     }
                 }, new Response.ErrorListener() {
                     @Override

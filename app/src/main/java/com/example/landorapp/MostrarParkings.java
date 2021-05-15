@@ -42,7 +42,8 @@ public class MostrarParkings extends AppCompatActivity {
     List<Parking> parkingList;
     RecyclerView recyclerView;
     HashMap<String, String> empresas = new HashMap<String, String>();
-    boolean isManager = false;
+    boolean isManager;
+    Usuario usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,27 +51,9 @@ public class MostrarParkings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrar_parkings);
         //sacamos user
-        FRUser.getCurrentUser().getUserInfo(new FRListener<UserInfo>() {
-            @Override
-            public void onSuccess(UserInfo result) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            JSONObject json = result.getRaw();
-                            String rol = json.getString("roles");
-                            if(rol.contains("Manager")) isManager=true;
-                        } catch (JSONException e) {
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onException(Exception e) {
-
-            }
-        });
+        Intent i = getIntent();
+        usuario = (Usuario)i.getSerializableExtra("sampleObject");
+        isManager=usuario.isManager();
 
         recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -78,8 +61,8 @@ public class MostrarParkings extends AppCompatActivity {
 
         parkingList = new ArrayList<>();
         //cargo primero los nombre de empresa en el volley ya que no puedo hacer dos peticiones a la vez
-        getNombreEmpresas();
-        cargarParkings();
+        InicializarComponentes();
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.lista);
@@ -88,19 +71,27 @@ public class MostrarParkings extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.mapa:
-                        startActivity(new Intent(MostrarParkings.this, MapsActivity.class));
+                        Intent a = new Intent(MostrarParkings.this,MapsActivity.class);
+                        a.putExtra("sampleObject", usuario);
+                        startActivity(a);
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.lista:
-                        startActivity(new Intent(MostrarParkings.this, MostrarParkings.class));
+                        Intent b = new Intent(MostrarParkings.this,MostrarParkings.class);
+                        b.putExtra("sampleObject", usuario);
+                        startActivity(b);
                         overridePendingTransition(0,0);
                         return true;
                     case R.id.configuracion:
                         if(isManager){
-                            startActivity(new Intent(MostrarParkings.this, ManagerSettings.class));
+                            Intent c = new Intent(MostrarParkings.this,ManagerSettings.class);
+                            c.putExtra("sampleObject", usuario);
+                            startActivity(c);
                         }
                         else {
-                            startActivity(new Intent(MostrarParkings.this, UserSettings.class));
+                            Intent d = new Intent(MostrarParkings.this,UserSettings.class);
+                            d.putExtra("sampleObject", usuario);
+                            startActivity(d);
                         }
                         overridePendingTransition(0,0);
                         return true;
@@ -173,7 +164,7 @@ public class MostrarParkings extends AppCompatActivity {
         return strAdd;
     }
 
-    private void getNombreEmpresas(){
+    private void InicializarComponentes(){
         JsonArrayRequest jsonArrayRequest= new JsonArrayRequest("http://192.168.1.144/landorWebServices/getEmpresas.php", new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
@@ -186,6 +177,7 @@ public class MostrarParkings extends AppCompatActivity {
                         // Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
+                cargarParkings();
             }
         }, new Response.ErrorListener() {
             @Override
