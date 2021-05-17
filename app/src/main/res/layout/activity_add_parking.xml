@@ -6,15 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".AddParking">
 
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="NUEVO PARKING"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/name_label_nombreParking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="48dp"
-        android:text="Nombre parking"
+        android:layout_marginTop="68dp"
+        android:text="Nombre del Parking: "
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <EditText
         android:id="@+id/name_text_nombreParking"
@@ -23,7 +36,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:ems="10"
-        android:hint="enter_name_hint"
         android:inputType="text"
         app:layout_constraintBaseline_toBaselineOf="@+id/name_label_nombreParking"
         app:layout_constraintStart_toEndOf="@+id/name_label_nombreParking" />
@@ -34,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="48dp"
-        android:text="tarifa parking"
+        android:text="Tarifa/min: "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/name_label_nombreParking" />
 
@@ -45,7 +57,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:ems="10"
-        android:hint="enter_name_hint"
         android:inputType="numberDecimal"
         app:layout_constraintBaseline_toBaselineOf="@+id/name_label_tarifa"
         app:layout_constraintStart_toEndOf="@+id/name_label_tarifa" />
@@ -56,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="48dp"
-        android:text="direccion"
+        android:text="Dirección: "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/name_label_tarifa" />
 
@@ -67,7 +78,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:ems="10"
-        android:hint="enter_name_hint"
         android:inputType="text"
         app:layout_constraintBaseline_toBaselineOf="@+id/name_label_direccion"
         app:layout_constraintStart_toEndOf="@+id/name_label_direccion" />
@@ -78,7 +88,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:text="ciudad"
+        android:text="Ciudad: "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name_label_direccion" />
 
@@ -90,7 +100,6 @@
         android:layout_marginLeft="8dp"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="enter_address_hint"
         android:inputType="textPostalAddress"
         app:layout_constraintBaseline_toBaselineOf="@+id/address_label_ciudad"
         app:layout_constraintStart_toEndOf="@+id/address_label_ciudad" />
@@ -101,7 +110,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:text="codigo postal"
+        android:text="Código Postal: "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/address_label_ciudad" />
 
@@ -113,7 +122,6 @@
         android:layout_marginLeft="8dp"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="enter_address_hint"
         android:inputType="number"
         app:layout_constraintBaseline_toBaselineOf="@+id/address_label_postal"
         app:layout_constraintStart_toEndOf="@+id/address_label_postal" />
@@ -124,7 +132,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:text="provincia"
+        android:text="Provincia: "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/address_label_postal" />
 
@@ -136,7 +144,6 @@
         android:layout_marginLeft="8dp"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="enter_address_hint"
         android:inputType="text"
         app:layout_constraintBaseline_toBaselineOf="@+id/address_label_provincia"
         app:layout_constraintStart_toEndOf="@+id/address_label_provincia" />
@@ -147,7 +154,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:text="pais"
+        android:text="Pais: "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/address_label_provincia" />
 
@@ -159,25 +166,23 @@
         android:layout_marginLeft="8dp"
         android:ems="10"
         android:gravity="start|top"
-        android:hint="enter_address_hint"
         android:inputType="text"
         app:layout_constraintBaseline_toBaselineOf="@+id/address_label_pais"
         app:layout_constraintStart_toEndOf="@+id/address_label_pais" />
-
-
-
 
 
     <Button
         android:id="@+id/btnComprar_adress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="124dp"
         android:onClick="GuardarParking"
+        android:paddingHorizontal="50dp"
         android:text="GUARDAR"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintHorizontal_bias="0.472"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/address_label_pais" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
