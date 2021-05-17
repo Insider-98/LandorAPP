@@ -10,13 +10,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -36,9 +34,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.maps.android.clustering.ClusterManager;
 
-import org.forgerock.android.auth.FRListener;
-import org.forgerock.android.auth.FRUser;
-import org.forgerock.android.auth.UserInfo;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,7 +66,6 @@ public class MapsActivity extends FragmentActivity implements  GoogleMap.OnInfoW
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         //consigo el user
-        //sacamos user
         Intent i = getIntent();
         usuario = (Usuario)i.getSerializableExtra("sampleObject");
         isManager=usuario.isManager();
@@ -85,7 +79,6 @@ public class MapsActivity extends FragmentActivity implements  GoogleMap.OnInfoW
         linearLayoutCustomView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //write your function here.
                 Parking parkingSeleccionado = buscarParking();
                 Intent intent = new Intent(MapsActivity.this, InfoParking.class);
                 intent.putExtra("MENSAJE_NOMBRE", parkingSeleccionado.getNombreParking());
@@ -167,23 +160,14 @@ public class MapsActivity extends FragmentActivity implements  GoogleMap.OnInfoW
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        //
-        // Add a marker in Sydney and move the camera
-        // mMap.addMarker(new MarkerOptions().position(sydney).title("Raku Detectado").draggable(true).snippet("hola es la descripcion").icon(BitmapDescriptorFactory.fromResource(R.drawable.mexico)));
-        //  mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        LatLng prueba = new LatLng(l[0], l[1]);
+        LatLng ubicacionActual = new LatLng(l[0], l[1]);
         Log.d("test", "onMapReady: prueb");
-        // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 18)); //con zoom
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(prueba)
-                .zoom(14)
+                .target(ubicacionActual)
+                .zoom(15)
                 .tilt(30)
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-        //DIALOG
-
-        //mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.setMaxZoomPreference(19.0f);
 
@@ -193,17 +177,11 @@ public class MapsActivity extends FragmentActivity implements  GoogleMap.OnInfoW
         mMap.setOnCameraIdleListener(clusterManager);
         mMap.setOnMarkerClickListener(this);
         googleMap.setOnInfoWindowClickListener(this);
-
-
-        //mMap.setMyLocationEnabled(true);
-        // mMap.getUiSettings().setMyLocationButtonEnabled(true);
     }
 
 
     @Override
     public boolean onMarkerClick(@NonNull Marker marker) {
-        // Toast.makeText(this, "mi evento2", Toast.LENGTH_SHORT).show();
-
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(marker.getPosition())
                 .zoom(mMap.getCameraPosition().zoom * 1.2f) //cada vez un poco mas de zoom
@@ -227,30 +205,21 @@ public class MapsActivity extends FragmentActivity implements  GoogleMap.OnInfoW
                 prevMarker = marker;
             }
             prevMarker = marker;
-            displayCustomeInfoWindow(marker);
+            displayCustomInfoWindow(marker);
         }
 
         return true; //movido de false a true para que no se ejecute lo que hay por defecto
     }
-    //implement the onClusterItemClick interface
 
 
-    @Override
-    public void onInfoWindowClick(@NonNull Marker marker) {
-        //   TolucaFragment.newIntance(marker.getTitle(), "blablabla").show(getSupportFragmentManager(), null);
-
-    }
-    private void displayCustomeInfoWindow(Marker marker) {
+    private void displayCustomInfoWindow(Marker marker) {
         linearLayoutCustomView.setVisibility(View.VISIBLE);
         TextView textViewTitle = linearLayoutCustomView.findViewById(R.id.textViewTitle);
         TextView textViewTarifa = linearLayoutCustomView.findViewById(R.id.textViewTarifa);
         TextView textViewDireccion = linearLayoutCustomView.findViewById(R.id.textViewDireccion);
-        // TextView textViewOtherDetails = linearLayoutCustomView.findViewById(R.id.textViewOtherDetails);
         textViewTitle.setText(marker.getTitle());
         textViewTarifa.setText(marker.getSnippet()+"€/min");
         textViewDireccion.setText(getCompleteAddressString(marker.getPosition().latitude, marker.getPosition().longitude));
-        // textViewOtherDetails.setText("LatLong :: " + marker.getPosition().latitude + "," + marker.getPosition().longitude);
-
     }
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
@@ -265,7 +234,6 @@ public class MapsActivity extends FragmentActivity implements  GoogleMap.OnInfoW
                     strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
                 }
                 strAdd = strReturnedAddress.toString();
-                //Log.w("My Current loction address", strReturnedAddress.toString());
             } else {
                 //   Log.w("My Current loction address", "No Address returned!");
             }
@@ -351,4 +319,8 @@ public class MapsActivity extends FragmentActivity implements  GoogleMap.OnInfoW
         requestQueue.add(jsonArrayRequest);
     }
 
+    @Override
+    public void onInfoWindowClick(@NonNull Marker marker) {
+
+    }
 }
