@@ -30,7 +30,6 @@ public class UserSettings extends AppCompatActivity {
 
     boolean isManager;
     Usuario usuario;
-    String nombreEmpresa_Query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -29,10 +29,6 @@ public class InfoParking extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_parking);
 
-
-
-
-
         TextView infoNombre = findViewById(R.id.mostrarInfoNombre_label);
         TextView infoTarifa = findViewById(R.id.mostrarInfoTarifa_label);
         TextView infoEmpresa = findViewById(R.id.mostrarInfoEmpresa_label);
